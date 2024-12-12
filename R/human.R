@@ -202,6 +202,7 @@ human <- function(
     selected_parts <- unlist(strsplit(participants$selected_parts[i], ", "))
     selected <- match.arg(selected_parts, choices = names(organ_to_id_map), several.ok = TRUE)
 
+    highlighted <- match.arg(participants$highlighted, choices = names(organ_to_id_map), several.ok = TRUE)
     highlighted_ids <- organ_to_id_map[highlighted]
     names(highlighted_ids) <- NULL
 

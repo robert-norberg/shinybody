@@ -16,7 +16,8 @@ participants <- data.frame(
          "thyroid_gland, adrenal_gland",
          "heart, liver",
          "brain, kidney"
-    )
+    ),
+    highlighted = c("adrenal_gland", "liver", "brain")
 )
 ```
 
