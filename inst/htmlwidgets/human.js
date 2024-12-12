@@ -6,41 +6,32 @@ HTMLWidgets.widget({
   factory: function (el) {
     return {
       renderValue: function (x) {
-        el.innerHTML = "";
+        el.innerHTML = x.svg_text;
+        el.style.border = "1px solid #ccc";
+        el.style.display = "inline-block";
+        el.style.verticalAlign = "top";
 
-        x.participants.forEach(function (participant) {
-          const container = document.createElement("div");
-          container.id = `participant-${participant.id}`;
-          container.style.marginBottom = "20px";
+        x.shown.forEach(function (id_to_show) {
+          const shownPart = el.querySelector(`#${id_to_show}`);
+          if (shownPart) {
+            shownPart.style.fill = "black";
+            shownPart.style.stroke = "black";
+          }
+        });
 
-          const svgContainer = document.createElement("div");
-          svgContainer.innerHTML = participant.svg_text;
-          svgContainer.style.border = "1px solid #ccc";
-          svgContainer.style.display = "inline-block";
-          svgContainer.style.verticalAlign = "top";
+        x.highlighted.forEach(function (id_to_highlight) {
+          const highlightPart = el.querySelector(`#${id_to_highlight}`);
+          if (highlightPart) {
+            highlightPart.style.fill = "yellow";
+            highlightPart.style.stroke = "yellow";
+          }
+        });
 
-          participant.selected_ids.forEach(function (selected_id) {
-            const selectedPart = svgContainer.querySelector(`#${selected_id}`);
-            if (selectedPart) {
-              selectedPart.style.fill = "red";
-              selectedPart.style.stroke = "blue";
-            }
-          });
-
-          const infoContainer = document.createElement("div");
-          infoContainer.style.display = "inline-block";
-          infoContainer.style.marginLeft = "10px";
-          infoContainer.style.verticalAlign = "top";
-          infoContainer.innerHTML = `
-            <strong>Participant ID:</strong> ${participant.id}<br>
-            <strong>Gender:</strong> ${participant.gender}<br>
-            <strong>Affected Body Parts:</strong> ${participant.selected_parts}<br>
-          `;
-
-          container.appendChild(svgContainer);
-          container.appendChild(infoContainer);
-
-          el.appendChild(container);
+        x.selected.forEach(function (id_to_select) {
+          const selectedPart = el.querySelector(`#${id_to_select}`);
+          if (selectedPart) {
+            selectedPart.setAttribute('data-selected', 'true');
+          }
         });
       },
 

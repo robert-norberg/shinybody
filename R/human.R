@@ -169,58 +169,38 @@ organ_to_id <- list(
 #'
 #' @export
 human <- function(
-    participants,
+    gender = c("male", "female"),
+    shown = "thyroid_gland",
+    highlighted = "adrenal_gland",
+    selected = c(),
     width = NULL,
     height = NULL,
     elementId = NULL) {
+  gender <- match.arg(gender, choices = c("male", "female"), several.ok = FALSE)
+  organ_to_id_map <- organ_to_id[[gender]]
+  shown <- match.arg(shown, choices = names(organ_to_id_map), several.ok = TRUE)
+  highlighted <- match.arg(highlighted, choices = names(organ_to_id_map), several.ok = TRUE)
+  selected <- match.arg(selected, choices = names(organ_to_id_map), several.ok = TRUE)
 
-  if (!"data.frame" %in% class(participants)) {
-    stop("'participants' must be a data frame.")
+  if (gender == "male") {
+    svg_file <- system.file("svgs", "homo_sapiens_male.svg", package = "shinybody")
+  } else {
+    svg_file <- system.file("svgs", "homo_sapiens_female.svg", package = "shinybody")
   }
+  svg_text <- paste(readLines(svg_file), collapse = "\n")
 
-  if (!all(c("id", "gender", "selected_parts") %in% colnames(participants))) {
-    stop("The data frame must contain 'id', 'gender', and 'selected_parts' columns.")
-  }
+  shown_ids <- organ_to_id_map[shown]
+  names(shown_ids) <- NULL
+  highlighted_ids <- organ_to_id_map[highlighted]
+  names(highlighted_ids) <- NULL
+  selected_ids <- organ_to_id_map[selected]
+  names(selected_ids) <- NULL
 
-  svg_files <- lapply(participants$gender, function(gender) {
-    if (gender == "male") {
-      system.file("svgs", "homo_sapiens_male.svg", package = "shinybody")
-    } else {
-      system.file("svgs", "homo_sapiens_female.svg", package = "shinybody")
-    }
-  })
-
-  svg_texts <- lapply(svg_files, function(svg_file) {
-    paste(readLines(svg_file), collapse = "\n")
-  })
-  
-
- participants <- lapply(seq_len(nrow(participants)), function(i) {
-    gender <- match.arg(participants$gender[i], choices = c("male", "female"), several.ok = FALSE)
-    organ_to_id_map <- organ_to_id[[gender]]
-
-    selected_parts <- unlist(strsplit(participants$selected_parts[i], ", "))
-    selected <- match.arg(selected_parts, choices = names(organ_to_id_map), several.ok = TRUE)
-
-    highlighted <- match.arg(participants$highlighted, choices = names(organ_to_id_map), several.ok = TRUE)
-    highlighted_ids <- organ_to_id_map[highlighted]
-    names(highlighted_ids) <- NULL
-
-    selected_ids <- organ_to_id_map[selected]
-    names(selected_ids) <- NULL
-
-    list(
-      id = participants$id[i],
-      gender = gender,
-      highlighted = highlighted_ids,
-      selected_ids = selected_ids,
-      selected_parts = selected_parts,
-      svg_text = svg_texts[[i]]
-    )
-  })
-
-  x <- list(
-    participants = participants
+  x = list(
+    shown = list(shown_ids),
+    highlighted  = list(highlighted_ids),
+    selected = list(selected_ids),
+    svg_text = svg_text
   )
 
   # create widget
@@ -261,3 +241,33 @@ renderHuman <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
   htmlwidgets::shinyRenderWidget(expr, humanOutput, env, quoted = TRUE)
 }
+
+
+displayParticipants <- function(participants) {
+
+  if (!"data.frame" %in% class(participants)) {
+    stop("'participants' must be a data frame.")
+  }
+
+  if (!all(c("id", "gender", "selected_parts") %in% colnames(participants))) {
+    stop("The data frame must contain 'id', 'gender', and 'selected_parts' columns.")
+  }
+
+  to_ret <- tagList()
+  for (i in seq_len(nrow(participants))) {
+    id <- participants$id[i]
+    gender <- participants$gender[i]
+    selected_parts <- unlist(strsplit(participants$selected_parts[i], ", "))
+    info_widget <- tagList(
+      tags$b(paste("Participant ID:", id)),
+      tags$b(paste("Gender:", gender)),
+      tags$b(paste("Affected Body Parts:", participants$selected_parts[i]))
+    )
+    body_widget <- human(gender = gender, shown = selected_parts, elementId = paste0("participant_", id))
+
+    participant_panel <- tagList(info_widget, body_widget)
+    to_ret[[length(to_ret) + 1]] <- participant_panel
+  }
+  to_ret
+}
+
