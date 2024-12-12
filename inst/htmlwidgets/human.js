@@ -6,15 +6,19 @@ HTMLWidgets.widget({
 
   factory: function(el, width, height) {
 
-    // TODO: define shared variables for this instance
-
     return {
 
       renderValue: function(x) {
 
         // TODO: code to render the widget, e.g.
         el.innerHTML = x.svg_text;
-
+        x.shown.forEach((item) => {
+          console.log(item);
+          let el_to_show = document.getElementById(item);
+          console.log(el_to_show.style);
+          el_to_show.style.fill = 'red';
+          el_to_show.style.stroke = 'blue';
+        })
       },
 
       resize: function(width, height) {

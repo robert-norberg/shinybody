@@ -176,6 +176,10 @@ human <- function(
     height = NULL,
     elementId = NULL) {
   gender <- match.arg(gender, choices = c("male", "female"), several.ok = FALSE)
+  organ_to_id_map <- organ_to_id[[gender]]
+  shown <- match.arg(shown, choices = names(organ_to_id_map), several.ok = TRUE)
+  highlighted <- match.arg(highlighted, choices = names(organ_to_id_map), several.ok = TRUE)
+  selected <- match.arg(selected, choices = names(organ_to_id_map), several.ok = TRUE)
 
   if (gender == "male") {
     svg_file <- system.file("svgs", "homo_sapiens_male.svg", package = "shinybody")
@@ -184,11 +188,18 @@ human <- function(
   }
   svg_text <- paste(readLines(svg_file), collapse = "\n")
 
+  shown_ids <- organ_to_id_map[shown]
+  names(shown_ids) <- NULL
+  highlighted_ids <- organ_to_id_map[highlighted]
+  names(highlighted_ids) <- NULL
+  selected_ids <- organ_to_id_map[selected]
+  names(selected_ids) <- NULL
+
   x = list(
-    svg_text = svg_text,
-    shown = shown,
-    highlighted  = highlighted,
-    selected = selected
+    shown = list(shown_ids),
+    highlighted  = list(highlighted_ids),
+    selected = list(selected_ids),
+    svg_text = svg_text
   )
 
   # create widget
