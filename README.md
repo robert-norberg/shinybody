@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 `shinybody` is an `htmlwidget` of the human body that allows you to
-hide/show and assign colors to 82 different body parts. The `human`
+hide/show and assign colors to 80 different body parts. The `human`
 widget is an `htmlwidget`, so it works in Quarto documents, R Markdown
 documents, or anything other HTML medium. It also functions as an
 input/output widget in a `shiny` app.
@@ -62,11 +62,8 @@ all_organs
 #> amygdala                    ✅     ✅
 #> aorta                       ✅     ✅
 #> appendix                    ✅     ✅
-#> artery                      ❌     ✅
 #> atrial_appendage            ✅     ✅
-#> B_cell                      ❌     ✅
-#> bladder                     ❌     ✅
-#> blood                       ❌     ✅
+#> bladder                     ✅     ✅
 #> bone                        ✅     ✅
 #> bone_marrow                 ✅     ✅
 #> brain                       ✅     ✅
@@ -91,20 +88,17 @@ all_organs
 #> gall_bladder                ✅     ✅
 #> gastroesophageal_junction   ✅     ✅
 #> heart                       ✅     ✅
-#> hippocampus                 ✅     ✅
 #> ileum                       ✅     ✅
 #> kidney                      ✅     ✅
 #> left_atrium                 ✅     ✅
 #> left_ventricle              ✅     ✅
-#> leukocyte                   ✅     ✅
+#> leukocyte                   ✅     ❌
 #> liver                       ✅     ✅
 #> lung                        ✅     ✅
 #> lymph_node                  ✅     ✅
 #> mitral_valve                ✅     ✅
-#> monocyte                    ❌     ✅
 #> nasal_pharynx               ✅     ✅
 #> nasal_septum                ✅     ✅
-#> natural_killer_cell         ❌     ✅
 #> nerve                       ✅     ✅
 #> nose                        ✅     ✅
 #> oral_cavity                 ✅     ✅
@@ -114,35 +108,30 @@ all_organs
 #> penis                       ✅     ❌
 #> pituitary_gland             ✅     ✅
 #> placenta                    ❌     ✅
-#> platelet                    ❌     ✅
 #> pleura                      ✅     ✅
 #> prefrontal_cortex           ✅     ✅
 #> prostate_gland              ✅     ❌
 #> pulmonary_valve             ✅     ✅
 #> rectum                      ✅     ✅
 #> renal_cortex                ✅     ✅
-#> retina                      ❌     ✅
 #> salivary_gland              ✅     ✅
 #> seminal_vesicle             ✅     ❌
 #> skeletal_muscle             ✅     ✅
 #> skin                        ✅     ✅
 #> small_intestine             ✅     ✅
 #> smooth_muscle               ✅     ✅
-#> spinal_cord                 ✅     ❌
+#> spinal_cord                 ✅     ✅
 #> spleen                      ✅     ✅
 #> stomach                     ✅     ✅
 #> submandibular_gland         ✅     ✅
-#> T_cell                      ❌     ✅
 #> temporal_lobe               ✅     ✅
 #> testis                      ✅     ❌
 #> throat                      ✅     ✅
 #> thyroid_gland               ✅     ✅
-#> title120                    ✅     ❌
 #> tongue                      ✅     ✅
 #> tonsil                      ✅     ✅
 #> trachea                     ✅     ✅
 #> tricuspid_valve             ✅     ✅
-#> urinary_bladder             ✅     ❌
 #> uterine_cervix              ❌     ✅
 #> uterus                      ❌     ✅
 #> vagina                      ❌     ✅

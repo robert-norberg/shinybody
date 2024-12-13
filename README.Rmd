@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-`shinybody` is an `htmlwidget` of the human body that allows you to hide/show and assign colors to 82 different body parts.
+`shinybody` is an `htmlwidget` of the human body that allows you to hide/show and assign colors to 80 different body parts.
 The `human` widget is an `htmlwidget`, so it works in Quarto documents, R Markdown documents, or anything other HTML medium.
 It also functions as an input/output widget in a `shiny` app. 
 

@@ -20,7 +20,7 @@ GSM5773344,M,skin,32,liver
 GSM5773344,M,colon,12,liver
 GSM5773344,M,adrenal_gland,38,liver
 GSM5773353,F,pancreas,47,breast
-GSM5773353,F,urinary_bladder,12,breast
+GSM5773353,F,bladder,12,breast
 GSM5773353,F,adrenal_gland,47,breast
 GSM5773355,M,throat,7,skin
 GSM5773355,M,heart,10,skin
@@ -31,6 +31,6 @@ GSM5773356,M,skin,8,smooth_muscle
 GSM5773359,F,breast,13,lymph_node
 GSM5773359,F,kidney,19,lymph_node
 GSM5773359,F,brain,29,lymph_node
-GSM5773360,F,urinary_bladder,43,brain
+GSM5773360,F,bladder,43,brain
 GSM5773360,F,kidney,49,brain
 GSM5773360,F,lymph_node,29,brain
