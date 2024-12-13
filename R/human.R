@@ -172,7 +172,7 @@ human <- function(
     shown = c("thyroid_gland", "adrenal_gland"),
     selected = c("adrenal_gland"),
     hovertext = c("thyroid_gland" = "Metastases", "adrenal_gland" = "Primary Tumor"),
-    show_color = c("thyroid_gland" = "black", "adrenal_gland" = "grey"),
+    show_color = c("thyroid_gland" = "red", "adrenal_gland" = "grey"),
     select_color = "yellow",
     width = NULL,
     height = NULL,
@@ -180,6 +180,7 @@ human <- function(
   gender <- match.arg(gender, choices = c("male", "female"), several.ok = FALSE)
   organ_to_id_map <- organ_to_id[[gender]]
   shown <- match.arg(shown, choices = names(organ_to_id_map), several.ok = TRUE)
+  
   if (!is.null(selected)) {
     selected <- match.arg(selected, choices = names(organ_to_id_map), several.ok = TRUE)
   } else {
