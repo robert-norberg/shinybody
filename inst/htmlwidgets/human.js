@@ -95,14 +95,10 @@ HTMLWidgets.widget({
                 selectedOrgans.push(organObject.name);
               }
 
-              console.log("Selected organs:", selectedOrgans);
-
               if (window.Shiny) {
                 if (selectedOrgans.length > 0) {
-                  console.log("Sending", selectedOrgans);
                   Shiny.setInputValue("selected_body_parts", selectedOrgans);
                 } else {
-                  console.log("Sending", "no organs");
                   Shiny.setInputValue("selected_body_parts", "empty");
                 }
 
@@ -119,8 +115,6 @@ HTMLWidgets.widget({
                         container.innerHTML = "";
                         container.style.display = "none";
                       }
-
-                      console.log("Selected organs cleared.");
                     }
                   }
                 );
@@ -128,60 +122,80 @@ HTMLWidgets.widget({
                 Shiny.addCustomMessageHandler(
                   "organ_data_response",
                   function (data) {
-                    console.log("Received data from R:", data);
-
                     container.innerHTML = "";
                     container.appendChild(title);
 
                     if (data.length > 0) {
                       container.style.display = "block";
+
                       data.forEach((item) => {
                         const fieldContainer = document.createElement("div");
                         fieldContainer.style.marginBottom = "20px";
                         fieldContainer.style.padding = "15px";
-                        fieldContainer.style.border = "1px solid #ccc";
+                        fieldContainer.style.border = "1px solid #ddd";
                         fieldContainer.style.borderRadius = "8px";
                         fieldContainer.style.backgroundColor = "#ffffff";
                         fieldContainer.style.boxShadow =
-                          "0px 2px 4px rgba(0, 0, 0, 0.1)";
+                          "0px 4px 6px rgba(0, 0, 0, 0.1)";
+                        fieldContainer.style.fontFamily =
+                          "'Roboto', Arial, sans-serif";
 
-                        // Organ Name
-                        const organName = document.createElement("h4");
-                        organName.textContent = `Organ: ${item.part}`;
-                        organName.style.marginBottom = "10px";
-                        organName.style.color = "#2c3e50";
+                        // Tumor Location
+                        const tumorLocation = document.createElement("div");
+                        tumorLocation.style.display = "flex";
+                        tumorLocation.style.justifyContent = "space-between";
+                        tumorLocation.style.marginBottom = "8px";
+                        tumorLocation.innerHTML = `
+                          <h2 style="margin: 0; color: #2c3e50; font-size: 16px;">Tumor Location:</h4>
+                          <p style="margin: 0; font-size: 14px; color: #7f8c8d;">${item.tumor_location}</p>
+                        `;
 
-                        // Description
-                        const description = document.createElement("p");
-                        description.textContent = `Description: ${item.description}`;
-                        description.style.marginBottom = "8px";
-                        description.style.fontSize = "14px";
-                        description.style.color = "#7f8c8d";
+                        // Is Primary Tumor
+                        const isPrimaryTumor = document.createElement("div");
+                        isPrimaryTumor.style.display = "flex";
+                        isPrimaryTumor.style.justifyContent = "space-between";
+                        isPrimaryTumor.style.marginBottom = "8px";
+                        isPrimaryTumor.innerHTML = `
+                          <h2 style="margin: 0; color: #2c3e50; font-size: 16px;">Is Primary Tumor:</h4>
+                          <p style="margin: 0; font-size: 14px; color: #7f8c8d;">${item.is_primary_tumor}</p>
+                        `;
 
-                        // Info
-                        const info = document.createElement("p");
-                        info.textContent = `Info: ${item.info}`;
-                        info.style.marginBottom = "8px";
-                        info.style.fontSize = "14px";
-                        info.style.color = "#7f8c8d";
+                        // Stage
+                        const stage = document.createElement("div");
+                        stage.style.display = "flex";
+                        stage.style.justifyContent = "space-between";
+                        stage.style.marginBottom = "8px";
+                        stage.innerHTML = `
+                          <h2 style="margin: 0; color: #2c3e50; font-size: 16px;">Stage:</h4>
+                          <p style="margin: 0; font-size: 14px; color: #7f8c8d;">${item.stage}</p>
+                        `;
 
                         // Risk Level
-                        const riskLevel = document.createElement("p");
-                        riskLevel.textContent = `Risk Level: ${item.risk_level}`;
-                        riskLevel.style.marginBottom = "0";
-                        riskLevel.style.fontSize = "14px";
-                        riskLevel.style.fontWeight = "bold";
-                        riskLevel.style.color =
-                          item.risk_level === "High"
-                            ? "#e74c3c"
-                            : item.risk_level === "Medium"
-                            ? "#f39c12"
-                            : "#2ecc71";
+                        const riskLevel = document.createElement("div");
+                        riskLevel.style.display = "flex";
+                        riskLevel.style.justifyContent = "space-between";
+                        riskLevel.innerHTML = `
+                          <h2 style="margin: 0; color: #2c3e50; font-size: 16px;">Risk Level:</h4>
+                          <p style="margin: 0; font-size: 14px; font-weight: bold; color: ${
+                            item.stage === "III"
+                              ? "#e74c3c"
+                              : item.stage === "II"
+                              ? "#f39c12"
+                              : "#2ecc71"
+                          };">${
+                          item.stage === "III"
+                            ? "High"
+                            : item.stage === "II"
+                            ? "Medium"
+                            : "Low"
+                        }</p>
+                        `;
 
-                        fieldContainer.appendChild(organName);
-                        fieldContainer.appendChild(description);
-                        fieldContainer.appendChild(info);
+                        fieldContainer.appendChild(tumorLocation);
+                        fieldContainer.appendChild(isPrimaryTumor);
+                        fieldContainer.appendChild(stage);
                         fieldContainer.appendChild(riskLevel);
+
                         container.appendChild(fieldContainer);
                       });
                     } else {
