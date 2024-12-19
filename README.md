@@ -196,3 +196,41 @@ shinyApp(ui = ui, server = server)
 ```
 
 <img src="man/figures/README-demo-2.png" width="100%" />
+
+`shinybody` is `crosstalk` compatible. Here is an example of a simple
+`crosstalk` widget using `shinybody` and `DT`.
+
+``` r
+library(shinybody)
+library(DT)
+
+example_organs <- c("brain", "eye", "heart", "stomach", "bladder")
+my_organ_df <- subset(shinybody::shinybody_organs, organ %in% example_organs)
+my_organ_df$show <- TRUE
+my_organ_df$color <- grDevices::rainbow(nrow(my_organ_df))
+my_organ_df$selected[1] <- TRUE
+my_organ_df$hovertext <- mapply(
+  function(o, clr) htmltools::strong(tools::toTitleCase(o), style = paste("color:", clr)),
+  my_organ_df$organ,
+  my_organ_df$color,
+  SIMPLIFY = FALSE
+)
+my_organ_df_shared_data <- crosstalk::SharedData$new(my_organ_df)
+dt <- DT::datatable(
+  data = my_organ_df_shared_data,
+  options = list(
+    pageLength = 10,
+    columnDefs = list(
+      list(visible = FALSE, targets = c("male", "female", "show", "selected", "hovertext"))
+    )
+  ),
+  rownames = FALSE,
+  height = "500px",
+  autoHideNavigation = TRUE
+)
+crosstalk::bscols(
+  dt,
+  human(gender = "female", organ_df = my_organ_df_shared_data),
+  device = "sm"
+)
+```

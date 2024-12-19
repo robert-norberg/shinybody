@@ -206,7 +206,16 @@ human <- function(
     elementId = NULL) {
   gender <- match.arg(gender, choices = c("male", "female"), several.ok = FALSE)
   organ_to_id_map <- organ_to_id[[gender]]
-  stopifnot(is.data.frame(organ_df))
+  if (crosstalk::is.SharedData(organ_df)) {
+    key <- organ_df$key()
+    group <- organ_df$groupName()
+    organ_df <- organ_df$origData()
+  } else if (is.data.frame(organ_df)) {
+    key <- NULL
+    group <- NULL
+  } else {
+    stop("organ_df must be a data.frame or a crosstalk sharedData object")
+  }
   stopifnot("organ" %in% names(organ_df))
   if (anyDuplicated(organ_df$organ)) {
     duplicated_organs <- organ_df$organ[duplicated(organ_df$organ)]
@@ -282,6 +291,10 @@ human <- function(
   x = list(
     organs = organ_df,
     select_color = select_color,
+    settings = list(
+      crosstalk_key = key,
+      crosstalk_group = group
+    ),
     svg_text = svg_text
   )
 
@@ -292,6 +305,7 @@ human <- function(
       width = width,
       height = height,
       package = 'shinybody',
+      dependencies = crosstalk::crosstalkLibs(),
       elementId = elementId
     )
   )

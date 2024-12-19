@@ -17,7 +17,8 @@ URL: https://github.com/robert-norberg/shinybody
 BugReports: https://github.com/robert-norberg/shinybody/issues
 Imports:
     htmlwidgets (>= 0.8),
-    htmltools
+    htmltools,
+    crosstalk
 Suggests:
     knitr,
     rmarkdown,
