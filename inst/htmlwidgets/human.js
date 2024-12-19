@@ -17,6 +17,8 @@ HTMLWidgets.widget({
         el.style.overflow = "hidden";
         el.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
 
+        let selectedOrgans = [];
+
         const tooltip = document.createElement("div");
         tooltip.id = "tooltip";
         tooltip.style.position = "absolute";
@@ -30,13 +32,14 @@ HTMLWidgets.widget({
         tooltip.style.zIndex = "10";
         document.body.appendChild(tooltip);
 
-        let selectedOrgans = [];
         var organ_data = HTMLWidgets.dataframeToD3(x.organs);
 
         organ_data.forEach(function (organObject) {
           const shownPart = el.querySelector(`#${organObject.organ_id}`);
+          shownPart.setAttribute("data-color", organObject.color);
 
           if (organObject.show) {
+            shownPart.setAttribute("data-show", true);
             shownPart.style.cursor = "pointer";
             if (organObject.selected) {
               shownPart.setAttribute("data-selected", "true");
@@ -47,8 +50,8 @@ HTMLWidgets.widget({
               selectedOrgans.push(organObject.organ);
             } else {
               shownPart.setAttribute("data-selected", "false");
-              shownPart.style.fill = organObject.color;
-              shownPart.style.stroke = organObject.color;
+              shownPart.style.fill = shownPart.dataset.color;
+              shownPart.style.stroke = shownPart.dataset.color;
               shownPart.style.strokeWidth = "0.3px";
               shownPart.style.opacity = 0.6;
             }
@@ -72,9 +75,9 @@ HTMLWidgets.widget({
 
             shownPart.addEventListener("click", function () {
               if (shownPart.getAttribute("data-selected") === "true") {
-                shownPart.removeAttribute("data-selected");
-                shownPart.style.fill = organObject.color;
-                shownPart.style.stroke = organObject.color;
+                shownPart.setAttribute("data-selected", "false");
+                shownPart.style.fill = shownPart.dataset.color;
+                shownPart.style.stroke = shownPart.dataset.color;
                 shownPart.style.strokeWidth = "0.3px";
                 shownPart.style.opacity = 0.6;
 
@@ -97,7 +100,29 @@ HTMLWidgets.widget({
             });
           }
         });
+        // add double-click handler to the container that de-selects all organs
+        el.addEventListener('dblclick', (event) => {
+          // Only clear selection if double-click was not on a shown organ
+          if (!event.target.dataset.show) {
+            selectedOrgans.forEach(function (organ_nm) {
+              const shownPart = el.querySelector(`.organ[data-organ-name=${organ_nm}`);
+              shownPart.setAttribute("data-selected", "false");
+              shownPart.style.fill = shownPart.dataset.color;
+              shownPart.style.stroke = shownPart.dataset.color;
+              shownPart.style.strokeWidth = "0.3px";
+              shownPart.style.opacity = 0.6;
+            });
+            // Clear all selections
+            selectedOrgans = [];
+            if (window.Shiny) {
+              Shiny.setInputValue("clicked_body_part", null);
+              Shiny.setInputValue("selected_body_parts", selectedOrgans);
+
+            }
+          }
+        });
         if (window.Shiny) {
+          Shiny.setInputValue("clicked_body_part", null);
           Shiny.setInputValue("selected_body_parts", selectedOrgans);
         }
       },
