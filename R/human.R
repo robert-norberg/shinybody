@@ -270,15 +270,7 @@ human <- function(
     organ_df$color <- "#000000" # black
   }
 
-  organs <- list()
-  for (i in seq_len(nrow(organ_df))) {
-    organlist <- as.list(
-      organ_df[i, c("organ", "show", "selected", "hovertext", "color")]
-    )
-    organlist$name <- organlist$organ
-    oid <- organ_to_id_map[[organlist$organ]]
-    organs[[oid]] <- organlist
-  }
+  organ_df$organ_id <- sapply(organ_df$organ, function(o) organ_to_id_map[[o]])
 
   if (gender == "male") {
     svg_file <- system.file("svgs", "homo_sapiens_male.svg", package = "shinybody")
@@ -288,7 +280,7 @@ human <- function(
   svg_text <- paste(readLines(svg_file), collapse = "\n")
 
   x = list(
-    organs = organs,
+    organs = organ_df,
     select_color = select_color,
     svg_text = svg_text
   )

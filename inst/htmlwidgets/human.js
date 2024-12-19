@@ -31,10 +31,10 @@ HTMLWidgets.widget({
         document.body.appendChild(tooltip);
 
         let selectedOrgans = [];
+        var organ_data = HTMLWidgets.dataframeToD3(x.organs);
 
-        Object.keys(x.organs).forEach(function (organ) {
-          const shownPart = el.querySelector(`#${organ}`);
-          const organObject = x.organs[organ];
+        organ_data.forEach(function (organObject) {
+          const shownPart = el.querySelector(`#${organObject.organ_id}`);
 
           if (organObject.show) {
             shownPart.style.cursor = "pointer";
@@ -44,7 +44,7 @@ HTMLWidgets.widget({
               shownPart.style.stroke = "black";
               shownPart.style.strokeWidth = "1px";
               shownPart.style.opacity = 1;
-              selectedOrgans.push(organObject.name);
+              selectedOrgans.push(organObject.organ);
             } else {
               shownPart.setAttribute("data-selected", "false");
               shownPart.style.fill = organObject.color;
@@ -53,7 +53,7 @@ HTMLWidgets.widget({
               shownPart.style.opacity = 0.6;
             }
 
-            let tooltip_contents = organObject.hovertext || organObject.name;
+            let tooltip_contents = organObject.hovertext || organObject.organ;
             shownPart.addEventListener("mouseenter", function (event) {
               tooltip.innerHTML = tooltip_contents;
               tooltip.style.left = `${event.pageX + 10}px`;
@@ -79,7 +79,7 @@ HTMLWidgets.widget({
                 shownPart.style.opacity = 0.6;
 
                 selectedOrgans = selectedOrgans.filter(
-                  (item) => item !== organObject.name
+                  (item) => item !== organObject.organ
                 );
               } else {
                 shownPart.setAttribute("data-selected", "true");
@@ -87,11 +87,11 @@ HTMLWidgets.widget({
                 shownPart.style.stroke = "black";
                 shownPart.style.strokeWidth = "1px";
                 shownPart.style.opacity = 1;
-                selectedOrgans.push(organObject.name);
+                selectedOrgans.push(organObject.organ);
               }
 
               if (window.Shiny) {
-                Shiny.setInputValue("clicked_body_part", organObject.name);
+                Shiny.setInputValue("clicked_body_part", organObject.organ);
                 Shiny.setInputValue("selected_body_parts", selectedOrgans);
               }
             });
