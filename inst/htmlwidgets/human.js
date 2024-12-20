@@ -40,7 +40,7 @@ HTMLWidgets.widget({
         var organ_data = HTMLWidgets.dataframeToD3(x.organs);
         sel_handle.setGroup(x.settings.crosstalk_group);
         fil_handle.setGroup(x.settings.crosstalk_group);
-        console.log("Clearing sel_handle before initial render");
+        // console.log("Clearing sel_handle before initial render");
         sel_handle.clear();
         selectedOrgans = []; // empty the selectedOrgans list upon rendering/re-rendering
 
@@ -86,7 +86,7 @@ HTMLWidgets.widget({
 
             shownPart.addEventListener("click", function () {
               if (shownPart.getAttribute("data-selected") === "true") {
-                console.log(`Click: selected ${organObject.organ}`)
+                // console.log(`Click: selected ${organObject.organ}`)
                 shownPart.setAttribute("data-selected", "false");
                 shownPart.style.fill = shownPart.dataset.color;
                 shownPart.style.stroke = shownPart.dataset.color;
@@ -97,7 +97,7 @@ HTMLWidgets.widget({
                   (item) => item !== organObject.organ
                 );
               } else {
-                console.log(`Click: de-selected ${organObject.organ}`)
+                // console.log(`Click: de-selected ${organObject.organ}`)
                 shownPart.setAttribute("data-selected", "true");
                 shownPart.style.fill = x.select_color;
                 shownPart.style.stroke = "black";
@@ -109,7 +109,7 @@ HTMLWidgets.widget({
                 organ_nm => el.querySelector(`.organ[data-organ-name=${organ_nm}`).id
               );
               sel_handle.set(selectedOrgansIds);
-              console.log(`Selected keys: ${selectedOrgansIds}`)
+              // console.log(`Selected keys: ${selectedOrgansIds}`)
 
               if (window.Shiny) {
                 Shiny.setInputValue("clicked_body_part", organObject.organ);
@@ -123,7 +123,7 @@ HTMLWidgets.widget({
           // Only clear selection if double-click was not on a shown organ
           if (event.target.dataset.show !== 'true') {
             selectedOrgans.forEach(function (organ_nm) {
-              console.log(`Doubleclick: de-selected ${organ_nm}`)
+              // console.log(`Doubleclick: de-selected ${organ_nm}`)
               const shownPart = el.querySelector(`.organ[data-organ-name=${organ_nm}`);
               shownPart.setAttribute("data-selected", "false");
               shownPart.style.fill = shownPart.dataset.color;
@@ -133,7 +133,7 @@ HTMLWidgets.widget({
             });
             // Clear all selections
             selectedOrgans = [];
-            console.log("Clearing sel_handle");
+            // console.log("Clearing sel_handle");
             sel_handle.clear();
             if (window.Shiny) {
               Shiny.setInputValue("clicked_body_part", null);
@@ -143,13 +143,13 @@ HTMLWidgets.widget({
         });
         // callback that is triggered by the sharedData selection changing
         sel_handle.on("change", function(event) {
-          console.log("sel_handle change event triggered");
+          // console.log("sel_handle change event triggered");
           if (firstRun) {
             // do nothing
-            console.log("First run, doing nothing.");
+            // console.log("First run, doing nothing.");
           } else {
             if (event.sender !== sel_handle) {
-              console.log("De-selecting all organs because another crosstalk widget triggered a selection event")
+              // console.log("De-selecting all organs because another crosstalk widget triggered a selection event")
               selectedOrgans.forEach(function (organ_nm) {
                 const selectedPart = el.querySelector(`.organ[data-organ-name=${organ_nm}`);
                 selectedPart.setAttribute("data-selected", "false");
@@ -165,7 +165,7 @@ HTMLWidgets.widget({
               selectedOrgans.forEach(function (organ_nm) {
                 const selectedPart = el.querySelector(`.organ[data-organ-name=${organ_nm}`);
                 if (!event.value.includes(selectedPart.id)) {
-                  console.log(`Selection Change (2): de-selected ${organ_nm}`);
+                  // console.log(`Selection Change (2): de-selected ${organ_nm}`);
                   selectedPart.setAttribute("data-selected", "false");
                   selectedPart.style.fill = selectedPart.dataset.color;
                   selectedPart.style.stroke = selectedPart.dataset.color;
@@ -181,9 +181,9 @@ HTMLWidgets.widget({
                 const selectedPart = el.querySelector(`#${organ_id}`);
                 const organ_nm = selectedPart.dataset.organName;
                 if (selectedOrgans.includes(organ_nm)) {
-                  console.log(`Selection Change: ${organ_nm} already selected, doing nothing`)
+                  // console.log(`Selection Change: ${organ_nm} already selected, doing nothing`)
                 } else {
-                  console.log(`Selection Change: Selected ${organ_nm}`);
+                  // console.log(`Selection Change: Selected ${organ_nm}`);
                   selectedPart.setAttribute("data-selected", "true");
                   selectedPart.style.fill = x.select_color;
                   selectedPart.style.stroke = "black";
@@ -193,7 +193,7 @@ HTMLWidgets.widget({
                 }
               });
             } else {
-              console.log("Selection Change: event.value is falsy, deselecting all organs");
+              // console.log("Selection Change: event.value is falsy, deselecting all organs");
               selectedOrgans.forEach(function (organ_nm) {
                 const selectedPart = el.querySelector(`.organ[data-organ-name=${organ_nm}`);
                 selectedPart.setAttribute("data-selected", "false");
@@ -211,28 +211,28 @@ HTMLWidgets.widget({
         });
         // callback triggered by crosstalk filter handle being updated
         fil_handle.on("change", function(event) {
-          console.log("fil_handle change event triggered")
+          // console.log("fil_handle change event triggered")
           if (firstRun) {
-            console.log("First run, doing nothing.");
+            // console.log("First run, doing nothing.");
           } else {
             let selectionChanged = false;
             if (event.value) {
               const shownOrgans = el.querySelectorAll(".organ[data-show='true']");
               // const shownOrganNames = Array.from(shownOrgans, o => o.dataset.organName);
-              console.log(`Shown Organs: ${shownOrganNames}`)
+              // console.log(`Shown Organs: ${shownOrganNames}`)
               const notShownOrgans = el.querySelectorAll(".organ:not([data-show='true'])");
               // const notShownOrganNames = Array.from(notShownOrgans, o => o.dataset.organName);
-              console.log(`Not Shown Organs: ${notShownOrganNames}`);
+              // console.log(`Not Shown Organs: ${notShownOrganNames}`);
               // hide any currently shown organs that aren't in the change event's value
               shownOrgans.forEach(function (organ) {
                 if (!event.value.includes(organ.id)) {
-                  console.log(`Filter Change (1): hiding ${organ.dataset.organName}`);
+                  // console.log(`Filter Change (1): hiding ${organ.dataset.organName}`);
                   organ.setAttribute("data-show", false);
                   organ.style.fill = "none";
                   organ.style.stroke = "none";
                   // remove hidden organs from selectedOrgans but don't update data-selected state
                   if (selectedOrgans.includes(organ.dataset.organName)) {
-                    console.log(`Removing ${organ.dataset.organName} from selectedOrgans`);
+                    // console.log(`Removing ${organ.dataset.organName} from selectedOrgans`);
                     selectedOrgans = selectedOrgans.filter(
                       (item) => item !== organ.dataset.organName
                     );
@@ -243,7 +243,7 @@ HTMLWidgets.widget({
               // now show any organs in the change event's value that aren't already shown
               notShownOrgans.forEach(function (organ) {
                 if (event.value.includes(organ.id)) {
-                  console.log(`Filter Change (2): showing ${organ.dataset.organName}`);
+                  // console.log(`Filter Change (2): showing ${organ.dataset.organName}`);
                   organ.setAttribute("data-show", true);
                   if (organ.dataset.selected === "true") {
                     organ.style.fill = x.select_color;
@@ -252,7 +252,7 @@ HTMLWidgets.widget({
                     organ.style.opacity = 1;
                     // if organ was in selected state when it was hidden,
                     // add it back to selectedOrgans now that it is un-hidden
-                    console.log(`Adding ${organ.dataset.organName} back to selectedOrgans`);
+                    // console.log(`Adding ${organ.dataset.organName} back to selectedOrgans`);
                     selectedOrgans.push(organ.dataset.organName);
                     selectionChanged = true;
                   } else {
@@ -264,7 +264,7 @@ HTMLWidgets.widget({
                 }
               });
             } else {
-              console.log("Filter Change (3): event.value is falsy, showing all organs")
+              // console.log("Filter Change (3): event.value is falsy, showing all organs")
               organ_data.forEach(function (organObject) {
                 const shownPart = el.querySelector(`#${organObject.organ_id}`);
                 if (organObject.show) {
@@ -276,7 +276,7 @@ HTMLWidgets.widget({
                     shownPart.style.opacity = 1;
                     // if organ was in selected state when it was hidden,
                     // add it back to selectedOrgans now that it is un-hidden
-                    console.log(`Adding ${shownPart.dataset.organName} back to selectedOrgans`);
+                    // console.log(`Adding ${shownPart.dataset.organName} back to selectedOrgans`);
                     selectedOrgans.push(shownPart.dataset.organName);
                     selectionChanged = true;
                   } else {
@@ -301,7 +301,7 @@ HTMLWidgets.widget({
         });
         // update crosstalk now that everything is initialized
         const selectedOrgansIds = selectedOrgans.map(organ_nm => el.querySelector(`.organ[data-organ-name=${organ_nm}`).id);
-        console.log("Updating sel_handle now that all organs are rendered");
+        // console.log("Updating sel_handle now that all organs are rendered");
         sel_handle.set(selectedOrgansIds);
         firstRun = false;
         // update shiny now that everything is initialized
